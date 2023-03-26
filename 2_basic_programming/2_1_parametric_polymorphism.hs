@@ -1,4 +1,5 @@
 module ParametricPoly where
+import Data.Function
 -- Про функцию говорят, что она обладает полиморфным поведением,
 -- если она может быть вызвана на значениях разных типов.
 -- Пример: оператор сложения "+"
@@ -59,5 +60,53 @@ semiMono x y = x
 -- Пример такой функции - оператор $:
 -- ($) :: (a -> b) -> a -> b
 
+-- пример 1
 apply2 :: (a -> a) -> a -> a
 apply2 f x = f $ f x
+
+-- пример 2
+-- flip :: (a -> b -> c) -> b -> a -> c
+-- flip f x y = f y x
+
+flipConst :: a -> b -> b
+flipConst = flip const
+
+-- Полезная функция из Data.Function - применяет оператор op к f(x) и f(y):
+-- on :: (b -> b -> c) -> (a -> b) -> a -> a -> c
+-- on op f x y = f x `op` f y
+
+-- Через нее можно определить сумму квадратов так:
+sumSquares = (+) `on` (^2)
+
+-- Перемножение вторых элементов пар:
+multSecond :: (a, Double) -> (a, Double) -> Double
+multSecond = (*) `on` snd
+
+-- ЛЯМБДА-ФУНКЦИИ
+-- пример 1
+f = \x -> 2 * x + 7
+-- Обратная косая черта "\" читается как "лямбда"
+
+-- пример 2
+-- длина вектора на плоскости
+len2dVec x y = sqrt $ x^2 + y^2
+
+len2dVec' = \x -> \y -> sqrt $ x^2 + y^2
+-- Версия с синтаксическим сахаром:
+len2dVec'' = \x y -> sqrt $ x^2 + y^2
+
+
+-- пример 3
+-- суммируем первые элементы пары пар
+p1 = ((1, 2), (3, 4))
+p2 = ((3, 4), (5, 6))
+
+sumFstFst = (+) `on` fstFst where
+  fstFst pp = fst $ fst pp
+
+sumFstFst' = (+) `on` (\pp -> fst $ fst pp)
+
+on3 :: (b -> b -> b -> c) -> (a -> b) -> a -> a -> a -> c
+on3 op f x y z = op (f x) (f y) (f z)
+
+sum3squares = (\x y z -> x + y + z) `on3` (^2) 
