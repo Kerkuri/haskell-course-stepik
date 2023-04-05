@@ -1,5 +1,6 @@
 module ListFunc where
 -- import Prelude hiding (length, (++), null)
+import Prelude hiding ((!!))
 
 -- Списки в функциональных языках программирования играют
 -- фундаментальную роль - аналогичную массивам в императивных
@@ -233,4 +234,38 @@ sum3' xs ys zs = xs `sum2` ys `sum2` zs
 -- [[1],[2],[3],[2],[4]]
 -- ОТВЕТ:
 groupElems :: Eq a => [a] -> [[a]]
-groupElems = undefined
+groupElems = helper []
+  where
+    helper acc [] = acc
+    helper [] (headElem : tailLst) = helper [[headElem]] tailLst
+    helper acc (headElem : tailLst)
+      | last (last acc) == headElem = let
+          newAcc = init acc ++ [last acc ++ [headElem]]
+          in helper newAcc tailLst
+      | otherwise = helper (acc ++ [[headElem]]) tailLst
+
+
+-- Функции работы со списками:
+-- 1) take - взять первых n элементов списка:
+take' :: Int  -> [a] -> [a]
+take' n _ | n <= 0 = []
+take' _ [] = []
+take' n (x : xs) = x : take (n - 1) xs
+-- 2) drop - вернуть список с выброшенными первыми n элементами:
+drop' :: Int -> [a] -> [a]
+drop' n xs | n <= 0 = xs
+drop' _ [] = []
+drop' n (_ : xs) = drop (n - 1) xs
+-- 3) splitAt - разрезает список на две части, поместив в первую часть N элементов)
+splitAt' :: Int -> [a] -> ([a], [a])
+splitAt' n xs = (take' n xs, drop' n xs)
+-- !!! NB: при работе со списками в Haskell довольно редко используется явная рекурсия.
+-- Вместо этого лучше использовать уже готовые стандартные функции для работы со списками.
+-- Явная рекурсия обычно есть только в низкоуровневых стандартных функциях.
+-- 4) Взятие элемента по индексу:
+xs !! n | n < 0 = error "Prelude.!!: ty che pes! negative index"
+[] !! _  = error "Prelude.!!: ty che pes! index too large"
+(x : _) !! 0 = x
+(_ : xs) !! n = xs !! (n - 1)
+-- NB: да, здесь взятие по индексу - это O(n)
+-- Но если нужно быстрее, то нужно использовать другой тип контейнера
