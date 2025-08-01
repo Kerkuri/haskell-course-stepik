@@ -109,3 +109,19 @@ overwrite x = let x = 2
     in let x = 4
       in x
 ```
+
+## Урок 4. Функции как значения первого класса
+
+- Функции можно передавать как аргументы других функций:
+```haskell
+ifEvenDo func x = if even x
+  then func x
+  else x
+
+-- ifEvenDouble = ifEvenDo (\x -> 2 * x)
+ifEvenDouble = ifEvenDo (2 *)
+
+-- ifEvenInc = ifEvenDo (\x -> x + 1)
+ifEvenInc = ifEvenDo (+ 1)
+```
+- Функции можно возвращать как результат функции
