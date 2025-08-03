@@ -143,3 +143,16 @@ discount thresh perc price
 -- Определение функции через частичное применение функции:
 standardDiscount = discount 1000 5
 ```
+
+- Аннотации функций - нет разделения между типами аргументов и типом возвращаемого значения, т.к. на самом деле все функции принимают одно значение
+```haskell
+makeAddress :: Int -> String -> String -> (Int, String, String)
+makeAddress number street town = (number, street, town)
+
+-- как ее видит Haskell:
+makeAddressReal = (
+  \number ->
+    (\street ->
+      (\town ->
+        (number, street, town))))
+```

@@ -24,3 +24,14 @@ discount thresh perc price
 
 -- Определение функции через частичное применение функции:
 standardDiscount = discount 1000 5
+
+
+makeAddress :: Int -> String -> String -> (Int, String, String)
+makeAddress number street town = (number, street, town)
+
+makeAddressReal :: Int -> String -> String -> (Int, String, String)
+makeAddressReal = (
+  \number ->
+    (\street ->
+      (\town ->
+        (number, street, town))))
